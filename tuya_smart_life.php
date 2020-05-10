@@ -8,8 +8,9 @@
  * - Required : Create one http controler per device to control your tuya devices
  *    [VAR1] : id of device (go to smart life app, edit device go to device infos, id is value on "virtual id"
  *    Values :
- *      OFF : value 0, url http://localhost/script/?exec=tuya_smart_life.php&actionDeviceId=[VAR1]&actionDeviceValue=0
- *      ON : value 100, url http://localhost/script/?exec=tuya_smart_life.php&actionDeviceId=[VAR1]&actionDeviceValue=1
+ *      Off : value 0, url http://localhost/script/?exec=tuya_smart_life.php&actionDeviceId=[VAR1]&actionDeviceValue=0
+ *      On : value 100, url http://localhost/script/?exec=tuya_smart_life.php&actionDeviceId=[VAR1]&actionDeviceValue=1
+ *      Offline : masqué, value 200, url http://localhost/script/?exec=tuya_smart_life.php&actionDeviceId=[VAR1]
  * - Optional : Create one http sensor to update status of your controlers if you use smart life app to control your tuya devices too
  *    Url : http://localhost/script/?exec=tuya_smart_life.php&refreshDevices=true
  *    XPath : /root/status
@@ -34,8 +35,8 @@ $authData = array(
 );
 // Mapping tuya id to eedomus id
 $devicesAssoc = array(
-    '111222333' => '123',
-    '444555666' => '456',
+    '123123123' => '321321',
+    '456456456' => '654654',
 );
 
 
@@ -213,6 +214,7 @@ if ($refreshDevices) {
     foreach ($devicesAssoc as $tuya => $eedomus) {
         $value = getValue($eedomus);
         $newValue = $devices[$tuya]['data']['state'] ? 100 : 0;
+        $newValue = $devices[$tuya]['data']['online'] ? $newValue : 200;
         if ($value['value'] != $newValue) {
             setValue($eedomus, $newValue, false, true);
         }
